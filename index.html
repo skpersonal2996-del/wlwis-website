@@ -1,0 +1,1415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>We Love Working In Space</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="video" href="assets/astronaut-pullback.mp4" type="video/mp4">
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Sora:wght@400;600&family=Manrope:wght@200;400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" id="gf" media="print" onload="this.media='all'">
+<style>
+:root{
+  --bg:#050409;
+  --ink:#ece8f8;
+  --muted:rgba(222,216,245,.56);
+  --faint:rgba(222,216,245,.3);
+  --pink:#e76bc8;
+  --purple:#8a6ae8;
+  --blue:#4f6fe0;
+  --ease:cubic-bezier(.76,0,.24,1);
+  --out:cubic-bezier(.2,.8,.2,1);
+  --gutter:6vw;
+  /* calm, low-vibrancy grade for the Higgsfield footage */
+  --grade:saturate(.5) brightness(.52) contrast(1.1) hue-rotate(-14deg);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* ---------- loader: Higgsfield footage of the astronaut drifting away ---------- */
+.bgv{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--bg)}
+.bgv video,.bgv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:var(--grade)}
+.bgv video{opacity:0;transition:opacity 1.4s ease}
+.bgv.playing video{opacity:1}
+.bgv img{opacity:0;transform-origin:50% 56%;transition:opacity 1.2s ease}
+.bgv.fallback img{opacity:1}
+/* re-colour the footage with the hero's palette: teal, blue, violet, pink */
+.bgv .tint{position:absolute;inset:0;mix-blend-mode:color;opacity:.55;
+  background:radial-gradient(60% 55% at 18% 22%,#1f6f6a 0%,transparent 70%),
+    radial-gradient(55% 50% at 82% 30%,#3a3fa8 0%,transparent 70%),
+    radial-gradient(50% 45% at 50% 62%,#5a3fa8 0%,transparent 75%),
+    radial-gradient(55% 45% at 78% 88%,#8a4a7e 0%,transparent 70%),#202a5a}
+.bgv .glow{position:absolute;inset:0;mix-blend-mode:screen;opacity:.5;
+  background:radial-gradient(38% 30% at 22% 18%,rgba(95,230,214,.14),transparent 70%),
+    radial-gradient(40% 32% at 50% 58%,rgba(138,106,232,.16),transparent 70%),
+    radial-gradient(36% 28% at 80% 86%,rgba(240,166,220,.12),transparent 70%)}
+.bgv .shade{position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(2,3,10,.82) 0%,rgba(2,3,10,.35) 38%,rgba(2,3,10,.3) 62%,rgba(2,3,10,.86) 100%),
+  radial-gradient(110% 85% at 50% 55%,transparent 35%,rgba(2,3,10,.82) 100%)}
+#particles{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+
+.grain{position:fixed;inset:-60%;z-index:40;pointer-events:none;opacity:.17;transition:opacity 1.2s ease;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation:grain .8s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-6%,4%)}40%{transform:translate(5%,-7%)}60%{transform:translate(-3%,8%)}80%{transform:translate(7%,2%)}100%{transform:translate(0,0)}}
+
+/* poster furniture (crosshairs, index, vertical label) */
+.loader{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity .6s ease}
+.loader.done{opacity:0}
+.plus{position:absolute;width:15px;height:15px;margin:-7px 0 0 -7px;opacity:0;transition:opacity 1.2s}
+.plus::before,.plus::after{content:"";position:absolute;background:rgba(235,230,255,.4)}
+.plus::before{left:7px;top:0;width:1px;height:15px}
+.plus::after{top:7px;left:0;height:1px;width:15px}
+.booted .plus{opacity:1}
+.vlabel{position:absolute;right:calc(var(--gutter) * .45);top:32px;writing-mode:vertical-rl;font:400 12px/1 Manrope,sans-serif;letter-spacing:.04em;color:var(--muted)}
+.vlabel sup{font-size:8px}
+.mono{font:500 11px/1.5 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ld-top{position:absolute;top:30px;left:var(--gutter);right:calc(var(--gutter) + 20px);display:flex;justify-content:space-between}
+.ld-top .r{text-align:right}
+.ld-bottom{position:absolute;left:var(--gutter);right:var(--gutter);bottom:5.5vh;display:flex;justify-content:space-between;align-items:flex-end}
+.status b{display:block;color:var(--ink);font-weight:500}
+.pct{font:200 clamp(56px,9vw,150px)/.8 Manrope,sans-serif;letter-spacing:-.05em;display:flex;align-items:flex-start;font-variant-numeric:tabular-nums}
+.pct #num{display:inline-block;min-width:2.2ch;text-align:right}
+.pct sup{font-size:.3em;margin:.1em 0 0 .15em;font-weight:400;color:var(--pink)}
+.bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.06)}
+.bar i{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#5fe6d6,#8a6ae8 50%,#f0a6dc)}
+.bar em{position:absolute;top:-4px;width:10px;height:10px;margin-left:-5px;border-radius:50%;left:0;background:#fff;
+  box-shadow:0 0 10px 2px rgba(231,107,200,.8),0 0 34px 8px rgba(231,107,200,.3)}
+
+/* ---------- studio name (collapses into WLWIS) ---------- */
+.brand-wrap{position:fixed;left:0;right:0;top:11vh;z-index:25;display:flex;justify-content:center;pointer-events:none}
+.brand-wrap.lift{z-index:60}
+.brand{display:flex;flex-wrap:wrap;justify-content:center;row-gap:.06em;max-width:94vw;
+  font:400 clamp(30px,5.3vw,104px)/1.08 Michroma,sans-serif;letter-spacing:.01em;text-transform:uppercase;transform-origin:0 0}
+.brand .w{display:inline-flex;margin:0 .22em}
+.ch{display:inline-block;background:linear-gradient(180deg,#ffffff 0%,#f1eefa 45%,#b9b0d6 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.brand .ch{animation:rise 1.1s var(--out) backwards;animation-delay:calc(var(--i) * 45ms + 150ms);animation-play-state:paused;
+  transition:opacity .55s ease,filter .55s ease,transform .55s ease}
+.fonts .brand .ch{animation-play-state:running}
+@keyframes rise{from{opacity:0;transform:translateY(.45em);filter:blur(10px)}}
+.brand.fading .r{opacity:0;filter:blur(10px);transform:translateY(-.25em) scale(.9);transition-delay:calc(var(--i) * 18ms)}
+.brand.collapsed{flex-wrap:nowrap}
+.brand.collapsed .r,.brand.collapsed .skip{display:none}
+.brand.collapsed .w{margin:0}
+
+/* ---------- black screen that slides down from the top ---------- */
+.curtain{position:fixed;inset:0;z-index:50;background:var(--bg);transform:translateY(-100%);
+  transition:transform 1.3s var(--ease)}
+.curtain::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(231,107,200,.55),rgba(138,106,232,.55),transparent)}
+.covered .curtain{transform:none}
+.covered .curtain::after{opacity:0;transition:opacity .4s 1.2s}
+
+/* ---------- site: live 3D space behind three stacked, centred sections ---------- */
+body.scrollable{overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+body.scrollable::-webkit-scrollbar{display:none}
+html{scrollbar-width:none}
+.scroll-space{height:0}
+.scrollable .scroll-space{height:700vh}
+.next{position:relative;z-index:55;background:#02030a}
+body:not(.scrollable) .next{display:none}
+.in-next .orbitbg{visibility:hidden}
+
+.orbitbg{position:fixed;inset:0;z-index:52;overflow:hidden;opacity:0;transition:opacity 1.6s ease;pointer-events:none;background:#02030a}
+.ready .orbitbg{opacity:1}
+.orbitbg canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.orbitbg.nogl{background:radial-gradient(30% 30% at 50% 30%,rgba(95,230,214,.22),transparent 70%),
+  radial-gradient(70% 50% at 50% 60%,rgba(138,106,232,.16),transparent 70%),#02030a}
+/* keeps the centred copy readable over the glow */
+.orbitbg .scrim{position:absolute;inset:0;opacity:var(--scrim,1);background:
+  radial-gradient(60% 50% at 18% 80%,rgba(2,3,10,.82) 0%,rgba(2,3,10,.5) 55%,rgba(2,3,10,0) 100%),
+  linear-gradient(180deg,rgba(2,3,10,.45) 0%,rgba(2,3,10,0) 16%,rgba(2,3,10,0) 55%,rgba(2,3,10,.55) 100%)}
+
+/* custom cursor: a dot, plus a lagging ring that stretches and splits into colour as it moves (mouse only) */
+.cur-dot,.cur-ring{position:fixed;left:0;top:0;display:none;pointer-events:none}
+@media (pointer:fine){
+  .cur-dot,.cur-ring{display:block}
+  body.scrollable,body.scrollable a,body.scrollable button{cursor:none}
+  .cur-dot,.cur-ring{position:fixed;left:0;top:0;z-index:90;pointer-events:none;opacity:0;transition:opacity .4s}
+  .scrollable .cur-dot,.scrollable .cur-ring{opacity:1}
+  .cur-dot{width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.8)}
+  .cur-ring i{position:absolute;left:-20px;top:-20px;width:40px;height:40px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.7);transition:width .4s var(--out),height .4s var(--out),left .4s var(--out),top .4s var(--out),background .4s}
+  .cur-ring i::before,.cur-ring i::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid #5fe6d6;
+    mix-blend-mode:screen;transform:translate(var(--gx,0px),var(--gy,0px))}
+  .cur-ring i::after{border-color:#f0a6dc;transform:translate(calc(var(--gx,0px) * -1),calc(var(--gy,0px) * -1))}
+  .cur-ring.hover i{left:-36px;top:-36px;width:72px;height:72px;background:rgba(255,255,255,.06)}
+  .cur-ring.glitch i{animation:cglitch .28s steps(2) 1}
+  @keyframes cglitch{0%{clip-path:inset(0 0 55% 0);transform:translateX(-4px)}50%{clip-path:inset(45% 0 0 0);transform:translateX(5px)}100%{clip-path:none;transform:none}}
+  .cur-burst{position:fixed;z-index:89;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;pointer-events:none;
+    border:1px solid rgba(240,166,220,.8);box-shadow:0 0 18px rgba(95,230,214,.35),inset 0 0 12px rgba(240,166,220,.3);
+    animation:burst .9s var(--out) forwards}
+  @keyframes burst{to{transform:scale(4.2);opacity:0}}
+}
+
+.site{position:fixed;inset:0;z-index:56;pointer-events:none}
+.nav{position:absolute;top:0;left:0;right:0;height:84px;padding:0 var(--gutter);display:flex;align-items:center;justify-content:space-between}
+.logo{display:inline-flex;font:400 19px/1.08 Michroma,sans-serif;letter-spacing:.01em;opacity:0;pointer-events:auto}
+.logo.on{opacity:1}
+.ready .grain{opacity:.06}
+
+.panel{position:absolute;left:var(--gutter);bottom:8vh;width:min(820px,80vw);text-align:left;
+  transform:translateY(var(--y,0px));opacity:var(--o,0);visibility:hidden}
+.panel.live{visibility:visible;pointer-events:auto}
+.label{display:inline-flex;align-items:center;gap:16px;margin-bottom:24px;
+  font:500 11px/1.5 "JetBrains Mono",monospace;letter-spacing:.24em;text-transform:uppercase;color:#bcc6ee}
+.label::before,.label::after{content:"";width:40px;height:1px}
+.label::before{background:linear-gradient(90deg,#5ee0d2,#f0a6dc)}
+.label::after{display:none}
+.panel h1,.panel h2{font-family:Sora,sans-serif;font-weight:400;font-size:clamp(34px,4.6vw,84px);line-height:1.04;letter-spacing:-.035em;
+  color:#f5f3fc;text-shadow:0 2px 30px rgba(0,0,0,.75),0 0 2px rgba(0,0,0,.6)}
+.panel h2{font-size:clamp(28px,3.5vw,64px);max-width:16em}
+.panel p{margin:22px 0 0;max-width:540px;font-size:clamp(15px,1.15vw,18px);line-height:1.7;color:rgba(236,234,248,.82);
+  text-shadow:0 1px 18px rgba(0,0,0,.8),0 0 2px rgba(0,0,0,.7)}
+.panel p + p{margin-top:14px}
+.panel .kicker{margin-top:26px;display:inline-flex;align-items:center;gap:14px;font:400 clamp(18px,1.5vw,24px)/1.4 Sora,sans-serif;
+  letter-spacing:-.01em;color:#f6d6ee}
+.panel .kicker::before{content:"";width:8px;height:8px;border-radius:50%;background:#f0a6dc;box-shadow:0 0 14px #f0a6dc}
+.cta{margin-top:36px;display:inline-flex;align-items:center;gap:14px;height:58px;padding:0 30px;border-radius:99px;
+  font-weight:500;font-size:15px;color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.24);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:background .35s,border-color .35s,transform .35s var(--out)}
+.cta i{width:7px;height:7px;border-radius:50%;background:#f0a6dc;box-shadow:0 0 12px #f0a6dc}
+.cta svg{transition:transform .35s var(--out)}
+.cta:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.42);transform:translateY(-2px)}
+.cta:hover svg{transform:translateX(4px)}
+.points{margin:34px 0 0;display:grid;grid-template-columns:repeat(3,1fr);max-width:900px;border-top:1px solid rgba(255,255,255,.16)}
+.points li{list-style:none;display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:20px 28px 0 22px;
+  border-left:1px solid rgba(255,255,255,.1);font-size:15px;line-height:1.6;color:rgba(240,238,250,.9);text-shadow:0 1px 14px rgba(0,0,0,.85)}
+.points li:first-child{border-left:0;padding-left:0}
+.points li span{font:500 11px/1 "JetBrains Mono",monospace;color:#f0a6dc;letter-spacing:.14em}
+
+/* section index on the right */
+.index{position:absolute;right:var(--gutter);top:50%;transform:translateY(-50%);display:grid;gap:22px;opacity:0;transition:opacity 1s 1.2s}
+.ready .index{opacity:1}
+.past-story .index,.past-story .hint{opacity:0!important;pointer-events:none}
+.nav{transition:background .6s}
+.past-story .nav{background:linear-gradient(180deg,rgba(2,3,10,.96) 55%,rgba(2,3,10,0))}
+.index a{display:flex;align-items:center;gap:14px;justify-content:flex-end;pointer-events:auto;
+  font:500 11px/1 "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(232,230,245,.38);transition:color .4s}
+.index a b{font-weight:500;display:inline-block;max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .6s var(--ease)}
+.index a::after{content:"";width:18px;height:1px;background:currentColor;transition:width .5s var(--ease)}
+.index a.on{color:#f4f2fb}
+.index a.on b{max-width:200px}
+.index a.on::after{width:40px}
+.hint{position:absolute;right:var(--gutter);bottom:26px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  font:500 10px/1 "JetBrains Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:rgba(232,230,245,.5);opacity:0}
+.ready .hint{opacity:var(--ho,0)}
+.hint i{width:1px;height:26px;background:linear-gradient(180deg,transparent,#f0a6dc);animation:drop 2s ease-in-out infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+@media (max-width:860px){
+  :root{--gutter:22px}
+  .brand-wrap{top:14vh}
+  .brand{font-size:clamp(24px,8vw,52px);max-width:90vw}
+  .ld-top .r,.vlabel{display:none}
+  .panel{bottom:7vh;width:auto;right:var(--gutter)}
+  .panel h1{font-size:clamp(30px,9vw,46px)}
+  .panel h2{font-size:clamp(20px,6vw,32px)}
+  .points{grid-template-columns:1fr}
+  .points li{border-left:0;border-bottom:1px solid rgba(255,255,255,.1);padding:14px 0;flex-direction:row}
+  .index{display:none}
+}
+/* ---------- sections 02 / 03: scannable cards, steps and tiles ---------- */
+.panel.wide{width:min(1080px,88vw)}
+.panel .lead{margin-top:20px;font:400 13px/1 "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(232,230,245,.55)}
+.cards{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card,.tile,.steps li,.marks li{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .8s var(--out),border-color .35s,background .35s;
+  transition-delay:calc(var(--k) * 110ms + 150ms)}
+.panel.live .card,.panel.live .tile,.panel.live .steps li,.panel.live .marks li{opacity:1;transform:none}
+.card{position:relative;padding:22px 22px 24px;border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:hidden}
+.card::after{content:"";position:absolute;inset:auto -30% -60% auto;width:70%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(240,166,220,.18),transparent 70%);opacity:.7;transition:opacity .4s}
+.card:hover{border-color:rgba(240,166,220,.45);transform:translateY(-3px)}
+.card svg{width:38px;height:38px;fill:none;stroke:#7fe9dc;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;margin-bottom:18px}
+.card:nth-child(2) svg{stroke:#b9a6ff}.card:nth-child(3) svg{stroke:#f0a6dc}
+.panel .card p{margin:0;max-width:none;font:400 clamp(16px,1.25vw,19px)/1.4 Sora,sans-serif;letter-spacing:-.01em;color:#f2f0fa;text-shadow:none}
+
+.tricky,.workout{margin-top:22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.tricky-lead{font:400 13px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,230,245,.62)}
+.steps,.marks{display:flex;gap:8px;flex-wrap:wrap;margin:0;padding:0}
+.steps li,.marks li{list-style:none;display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 16px 0 8px;border-radius:99px;
+  background:rgba(10,12,26,.55);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  font:400 14px/1 Manrope,sans-serif;color:#eeecf8}
+.steps li b{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font:500 10px/1 "JetBrains Mono",monospace;color:#0a0b16;
+  background:linear-gradient(135deg,#7fe9dc,#f0a6dc)}
+.steps li:not(:last-child)::after{content:"";width:18px;height:1px;margin:0 -24px 0 6px;background:linear-gradient(90deg,rgba(255,255,255,.4),transparent)}
+
+.bring{margin-top:26px;display:grid;grid-template-columns:1fr auto 1fr auto 1.1fr;align-items:stretch;gap:12px}
+.tile{display:flex;flex-direction:column;justify-content:center;gap:8px;padding:20px 22px;border-radius:18px;min-height:104px;
+  background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font:400 clamp(16px,1.3vw,20px)/1.3 Sora,sans-serif;color:#f2f0fa}
+.tile span{font:500 10px/1 "JetBrains Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:#7fe9dc}
+.tile.result{background:linear-gradient(135deg,rgba(95,230,214,.16),rgba(138,106,232,.16) 55%,rgba(240,166,220,.2));border-color:rgba(240,166,220,.38)}
+.tile.result span{color:#f6d6ee}
+.join{align-self:center;font-style:normal;font:300 22px/1 Sora,sans-serif;color:rgba(232,230,245,.5)}
+.marks li i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font-style:normal;font-size:12px}
+.marks .yes{background:rgba(95,230,214,.18);color:#7fe9dc}
+.marks .no{background:rgba(240,120,160,.16);color:#f39ac2}
+.marks .go{background:rgba(138,106,232,.22);color:#c9b8ff}
+
+@media (max-width:860px){
+  .cards{grid-template-columns:1fr;gap:8px}
+  .card{display:flex;align-items:center;gap:14px;padding:12px 14px}
+  .card svg{width:28px;height:28px;margin:0;flex:none}
+  .bring{grid-template-columns:1fr;gap:6px}
+  .join{display:none}
+  .tile{min-height:0;padding:12px 14px}
+  .steps li:not(:last-child)::after{display:none}
+}
+
+/* ---------- 04 / what we can make: a scroll-driven build ---------- */
+.next{min-height:0}
+.scrollable .next{height:640vh}
+.build{position:sticky;top:0;height:100vh;overflow:hidden;
+  background:radial-gradient(circle at 1px 1px,rgba(200,205,255,.07) 1px,transparent 1.5px) 0 0/26px 26px,#02030a}
+.build-inner{position:absolute;inset:104px var(--gutter) 44px;display:grid;grid-template-columns:minmax(300px,31%) 1fr;gap:4.5vw}
+.make-copy{align-self:center}
+.make-copy h2{margin-top:2px;font:400 clamp(30px,3.1vw,52px)/1.08 Sora,sans-serif;letter-spacing:-.035em;color:#f5f3fc}
+.make-sub{margin-top:16px;font-size:clamp(14px,1.05vw,16px);line-height:1.65;color:rgba(236,234,248,.66);max-width:420px}
+.services{margin:30px 0 0;padding:0;border-top:1px solid rgba(255,255,255,.12)}
+.services li{list-style:none;display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.08);transition:opacity .5s}
+.services li .n{font:500 11px/1.9 "JetBrains Mono",monospace;color:rgba(232,230,245,.4);transition:color .4s}
+.services h3{font:400 clamp(17px,1.35vw,21px)/1.3 Sora,sans-serif;letter-spacing:-.01em;color:rgba(240,238,250,.45);transition:color .4s}
+.services li p{max-height:0;overflow:hidden;opacity:0;margin-top:0;font-size:14px;line-height:1.6;color:rgba(236,234,248,.7);
+  transition:max-height .6s var(--ease),opacity .5s,margin .5s}
+.services li.on h3{color:#fff}
+.services li.on .n{color:#f0a6dc}
+.services li.on p{max-height:120px;opacity:1;margin-top:8px}
+
+.stage{position:relative;display:flex;flex-direction:column;min-width:0}
+.stage-top{display:flex;justify-content:space-between;align-items:flex-start;height:64px}
+.phases{display:flex;gap:6px;margin:0;padding:0}
+.phases li{list-style:none;font:500 10px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;padding:7px 10px;border-radius:99px;
+  color:rgba(232,230,245,.38);border:1px solid rgba(255,255,255,.08);transition:.4s}
+.phases li.done{color:rgba(232,230,245,.7)}
+.phases li.on{color:#0b0c18;background:linear-gradient(135deg,#7fe9dc,#f0a6dc);border-color:transparent}
+.bprog{display:grid;grid-template-columns:auto auto;align-items:end;text-align:right;line-height:1}
+.bprog .mono{grid-column:1/3;margin-bottom:4px}
+.bprog b{font:200 clamp(38px,4vw,64px)/.9 Sora,sans-serif;letter-spacing:-.05em;color:rgba(240,238,250,.26);font-variant-numeric:tabular-nums}
+.bprog i{font:300 18px/1 Sora,sans-serif;font-style:normal;color:rgba(240,166,220,.7);margin-left:2px}
+
+.devbox{position:relative;flex:1;min-height:0}
+.dev{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);overflow:hidden;
+  border:1px solid rgba(220,225,255,.32);background:rgba(10,12,26,.55);box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.chrome{position:absolute;left:0;right:0;top:0;height:34px;display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid rgba(220,225,255,.16);z-index:3}
+.chrome i{width:7px;height:7px;border-radius:50%;background:rgba(220,225,255,.3)}
+.chrome .url{position:absolute;left:50%;transform:translateX(-50%);font:500 10px/1 "JetBrains Mono",monospace;color:rgba(232,230,245,.6);
+  padding:5px 12px;border:1px solid rgba(255,255,255,.12);border-radius:99px}
+.notch{position:absolute;left:50%;top:10px;width:84px;height:20px;margin-left:-42px;border-radius:99px;background:#000;z-index:4;opacity:0}
+.cols{position:absolute;inset:34px 5% 0;background:repeating-linear-gradient(90deg,rgba(240,166,220,.06) 0 calc(100%/12 - 8px),transparent calc(100%/12 - 8px) calc(100%/12));opacity:0}
+.layer{position:absolute;inset:34px 0 0}
+
+/* website */
+.we{position:absolute;left:var(--l);top:var(--t);width:var(--w);height:var(--h);border-radius:8px;
+  border:1px solid rgba(220,225,255,calc(.42 * var(--wire,0) * (1 - var(--ui,0))));
+  background:rgba(200,205,255,calc(.07 * var(--fill,0) * (1 - var(--ui,0))))}
+.we .bar,.we .line{position:absolute;left:4%;height:24%;border-radius:4px;background:rgba(200,205,255,.16);opacity:calc(var(--fill,0) * (1 - var(--ui,0)))}
+.we .line{height:10%;width:88%}
+.we .ui{position:absolute;inset:0;display:flex;align-items:center;opacity:var(--ui,0);font-weight:400;color:#f2f0fa}
+.we.pill{border-radius:99px}
+.we.pill .ui{justify-content:center;font:400 clamp(9px,.75vw,12px)/1 Manrope,sans-serif;border:1px solid rgba(255,255,255,.18);border-radius:99px}
+.we.logo .ui{font:500 clamp(12px,1.1vw,17px)/1 Sora,sans-serif;letter-spacing:-.02em}
+.we.logo em{color:#f0a6dc;font-style:normal}
+.we.head .ui{align-items:flex-start;font:400 clamp(16px,2.25vw,40px)/1.04 Sora,sans-serif;letter-spacing:-.04em}
+.we.para .ui{align-items:flex-start;font:400 clamp(9px,.8vw,13px)/1.55 Manrope,sans-serif;color:rgba(236,234,248,.7)}
+.we.btn{border-radius:99px}
+.we.btn .ui{justify-content:center;font:500 clamp(9px,.8vw,13px)/1 Manrope,sans-serif;border-radius:99px;border:1px solid rgba(255,255,255,.2)}
+.we.btn.primary .ui{border:0;color:#0b0c18;background:linear-gradient(100deg,#7fe9dc,#b9a6ff 55%,#f0a6dc)}
+.we.img{border-radius:14px;overflow:hidden}
+.we .x{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:rgba(220,225,255,.35);stroke-width:.4;vector-effect:non-scaling-stroke;opacity:calc(var(--wire,0) * (1 - var(--ui,0)))}
+.we .orb{background:radial-gradient(40% 40% at 52% 46%,#e9fffb 0%,#7fe9dc 18%,#6a5fd6 48%,rgba(20,18,50,.0) 72%),
+  radial-gradient(60% 20% at 50% 60%,rgba(240,166,220,.45),transparent 70%),linear-gradient(160deg,#121634,#1d1340 60%,#2a1438);border-radius:14px}
+.meas{position:absolute;opacity:calc(var(--wire,0) * (1 - var(--ui,0)));font:500 9px/1 "JetBrains Mono",monospace;color:#f0a6dc}
+.meas.mw{left:var(--l);top:var(--t);width:var(--w);border-top:1px solid #f0a6dc}
+.meas.mw span{position:absolute;left:50%;top:6px;transform:translateX(-50%)}
+.meas.mh{left:var(--l);top:var(--t);height:var(--h);border-left:1px solid #f0a6dc}
+.meas.mh span{position:absolute;right:6px;top:50%;transform:translateY(-50%)}
+.meas.top{left:5%;right:5%;top:2.5%;border-top:1px dashed rgba(240,166,220,.5)}
+.meas.top span{position:absolute;left:50%;top:-12px;transform:translateX(-50%);background:#0a0c1a;padding:0 6px}
+
+/* app */
+.layer.app{inset:0;padding:42px 16px 16px;opacity:0}
+.ap{position:relative;opacity:calc(var(--appb,0) * 7 - var(--k,0));transform:translateY(calc(12px * (1 - min(1, max(0, var(--appb,0) * 7 - var(--k,0))))));}
+.ap.status{display:flex;justify-content:space-between;font:600 11px/1 Manrope,sans-serif;color:#eee;opacity:1;transform:none;padding:0 10px 14px}
+.ap.hello small{display:block;font-size:11px;color:rgba(236,234,248,.55)}
+.ap.hello b{font:500 20px/1.2 Sora,sans-serif;letter-spacing:-.02em;color:#fff}
+.ap.card{margin-top:14px;padding:16px;border-radius:18px;background:linear-gradient(135deg,rgba(95,230,214,.25),rgba(138,106,232,.28) 55%,rgba(240,166,220,.3));border:1px solid rgba(255,255,255,.16)}
+.ap.card small{font-size:11px;color:rgba(255,255,255,.7)}
+.ap.card b{display:block;font:500 18px/1.3 Sora,sans-serif;color:#fff}
+.ap .ring{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:44px;height:44px}
+.ap .ring svg{width:100%;height:100%;transform:rotate(-90deg);fill:none;stroke-width:3}
+.ap .ring circle{stroke:rgba(255,255,255,.18)}
+.ap .ring .pr{stroke:#fff;stroke-dasharray:94.2;stroke-dashoffset:calc(94.2 - 68 * var(--appb,0));stroke-linecap:round}
+.ap .ring span{position:absolute;inset:0;display:grid;place-items:center;font:600 10px/1 Manrope,sans-serif;color:#fff}
+.ap.row{margin-top:10px;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.ap.row>i{width:28px;height:28px;border-radius:9px;background:color-mix(in srgb,var(--c) 30%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 60%,transparent)}
+.ap.row div{flex:1}
+.ap.row b{display:block;font:500 12px/1.3 Manrope,sans-serif;color:#fff}
+.ap.row small{font-size:10px;color:rgba(236,234,248,.55)}
+.tg{width:28px;height:16px;border-radius:99px;background:rgba(255,255,255,.14);position:relative}
+.tg::after{content:"";position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:.3s}
+.tg.on{background:#5fe6d6}.tg.on::after{left:14px}
+.ap.tabs{position:absolute;left:16px;right:16px;bottom:14px;display:flex;justify-content:space-around;padding:12px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.ap.tabs i{width:18px;height:18px;border-radius:6px;border:1.5px solid rgba(255,255,255,.4)}
+.ap.tabs i.on{border-color:#f0a6dc;background:rgba(240,166,220,.25)}
+.ap.toast{position:absolute;left:16px;right:16px;bottom:74px;padding:11px 14px;border-radius:12px;font:500 11px/1 Manrope,sans-serif;color:#0b0c18;background:#bff5ee}
+
+/* dashboard */
+.layer.dash{opacity:0}
+.ds{position:absolute;opacity:var(--dash,0)}
+.ds.side{left:0;top:0;bottom:0;width:17%;padding:16px 14px;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:12px}
+.ds.side b{font:500 15px/1 Sora,sans-serif;color:#fff;margin-bottom:8px}.ds.side em{color:#f0a6dc;font-style:normal}
+.ds.side i{height:9px;border-radius:4px;background:rgba(255,255,255,.12);width:80%}
+.ds.side i.on{background:linear-gradient(90deg,#7fe9dc,#b9a6ff)}
+.ds.top{left:20%;right:3%;top:12px;height:28px;display:flex;justify-content:space-between;align-items:center}
+.ds .search{font:400 11px/1 Manrope,sans-serif;color:rgba(236,234,248,.45);padding:8px 14px;border-radius:99px;border:1px solid rgba(255,255,255,.1);width:46%}
+.ds .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7fe9dc,#f0a6dc)}
+.ds.kpi{left:var(--l);top:58px;width:23%;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)}
+.ds.kpi small{display:block;font:400 10px/1.3 Manrope,sans-serif;color:rgba(236,234,248,.55)}
+.ds.kpi b{display:block;margin:4px 0 2px;font:400 clamp(16px,1.6vw,26px)/1 Sora,sans-serif;color:#fff;font-variant-numeric:tabular-nums}
+.ds.kpi em{font:500 9px/1 "JetBrains Mono",monospace;color:#7fe9dc;font-style:normal}
+.ds.chart{left:20%;width:48%;top:150px;bottom:16px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.ds.chart small,.ds.table small{font:400 10px/1 Manrope,sans-serif;color:rgba(236,234,248,.55)}
+.bars{position:absolute;left:14px;right:14px;bottom:12px;top:34px;display:flex;align-items:flex-end;gap:5px}
+.bars i{flex:1;height:100%;border-radius:4px 4px 1px 1px;background:linear-gradient(180deg,#f0a6dc,#8a6ae8 60%,rgba(95,230,214,.6));transform-origin:bottom;transform:scaleY(calc(var(--bars,0) * var(--hgt)))}
+.ds.table{left:71%;right:3%;top:150px;display:grid;gap:8px}
+.ds .tr{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  font:400 11px/1 Manrope,sans-serif;color:#eee}
+.st{font:500 9px/1 "JetBrains Mono",monospace;font-style:normal;padding:4px 7px;border-radius:99px}
+.st.ok{color:#7fe9dc;background:rgba(95,230,214,.12)}.st.run{color:#f0a6dc;background:rgba(240,166,220,.12)}
+
+/* tools pulled into the software */
+.tools span{position:absolute;left:var(--x);top:var(--y);transform:translate(calc(var(--dx,0) * 1px),calc(var(--dy,0) * 1px)) scale(calc(1 - var(--connect,0) * .4));
+  opacity:calc(var(--tools,0) * (1 - var(--connect,0) * .85));white-space:nowrap;
+  font:500 10px/1 "JetBrains Mono",monospace;letter-spacing:.06em;color:rgba(236,234,248,.8);padding:8px 12px;border-radius:99px;
+  border:1px dashed rgba(240,166,220,.55);background:rgba(10,12,26,.8);z-index:5}
+.links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:4}
+.links path{fill:none;stroke:url(#lg);stroke-width:1.2;stroke-dasharray:4 5}
+
+@media (max-width:860px){
+  .scrollable .next{height:560vh}
+  .build-inner{inset:84px 18px 20px;grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:14px}
+  .make-copy h2{font-size:24px}
+  .make-sub,.make-copy .label{display:none}
+  .services{margin-top:10px}
+  .services li{padding:8px 0}
+  .services li:not(.on){display:none}
+  .phases li:not(.on){display:none}
+  .stage-top{height:44px}
+  .bprog b{font-size:30px}
+  .tools span{font-size:8px;padding:6px 8px}
+  .we.para,.we.pill,.we.btn:not(.primary),.meas.mh{display:none}
+  .we.btn.primary{--w:34%!important;--t:66%!important}
+  .we.head{--h:30%!important}
+}
+
+/* ---------- 05 / the process: panels that expand on hover ---------- */
+.process{position:relative;z-index:55;background:#02030a;padding:16vh var(--gutter) 14vh}
+body:not(.scrollable) .process{display:none}
+.process-head{max-width:820px;margin-bottom:48px}
+.process-head h2{margin-top:2px;font:400 clamp(32px,4vw,68px)/1.04 Sora,sans-serif;letter-spacing:-.04em;color:#f5f3fc}
+.process-head p{margin-top:16px;font-size:clamp(15px,1.15vw,18px);line-height:1.6;color:rgba(236,234,248,.66)}
+
+.steps-row{display:flex;gap:12px;height:min(560px,64vh)}
+.step{position:relative;flex:1 1 0;min-width:0;overflow:hidden;border-radius:20px;cursor:pointer;outline:none;
+  background:linear-gradient(170deg,rgba(var(--tint),.12),rgba(255,255,255,.02) 55%),rgba(10,12,26,.6);
+  border:1px solid rgba(255,255,255,.1);transition:flex-grow .8s var(--ease),border-color .4s,background .4s;
+  opacity:0;transform:translateY(30px)}
+.process.seen .step{opacity:1;transform:none;transition:flex-grow .8s var(--ease),border-color .4s,opacity .8s ease,transform 1s var(--out)}
+.process.seen .step:nth-child(2){transition-delay:0s,0s,.08s,.08s}
+.process.seen .step:nth-child(3){transition-delay:0s,0s,.16s,.16s}
+.process.seen .step:nth-child(4){transition-delay:0s,0s,.24s,.24s}
+.process.seen .step:nth-child(5){transition-delay:0s,0s,.32s,.32s}
+.step.on{flex-grow:5.2;border-color:rgba(var(--tint),.45)}
+.step:focus-visible{border-color:#fff}
+.step::after{content:"";position:absolute;inset:auto -20% -30% -20%;height:60%;pointer-events:none;
+  background:radial-gradient(50% 60% at 50% 100%,rgba(var(--tint),.22),transparent 70%);opacity:.4;transition:opacity .6s}
+.step.on::after{opacity:1}
+
+.step-num{position:absolute;left:22px;top:22px;font:500 11px/1 "JetBrains Mono",monospace;letter-spacing:.12em;color:rgba(232,230,245,.5);transition:color .4s}
+.step.on .step-num{color:rgb(var(--tint))}
+/* collapsed: a vertical title */
+.step-v{position:absolute;left:50%;bottom:26px;writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);white-space:nowrap;
+  font:400 clamp(16px,1.35vw,22px)/1 Sora,sans-serif;letter-spacing:-.01em;color:rgba(240,238,250,.82);transition:opacity .35s}
+.step.on .step-v{opacity:0}
+/* expanded: art + copy */
+.step-body{position:absolute;left:28px;right:28px;bottom:28px;max-width:520px;opacity:0;transform:translateY(14px);
+  transition:opacity .35s,transform .5s var(--out)}
+.step.on .step-body{opacity:1;transform:none;transition:opacity .6s .35s,transform .8s .3s var(--out)}
+.step-body h3{font:400 clamp(22px,2vw,32px)/1.15 Sora,sans-serif;letter-spacing:-.03em;color:#fff}
+.step-body p{margin-top:12px;font-size:clamp(14px,1.05vw,16px);line-height:1.65;color:rgba(236,234,248,.72)}
+
+.art{position:absolute;left:50%;top:44%;width:min(460px,92%);transform:translate(-50%,-50%) scale(.9);opacity:.18;filter:grayscale(1);
+  transition:opacity .6s,transform .9s var(--out),filter .6s;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.step.on .art{opacity:1;filter:none;transform:translate(-50%,-62%) scale(1)}
+.art .pl{fill:rgba(var(--tint),.14);stroke:rgba(var(--tint),.8);stroke-width:1.4}
+.art .pl.b{fill:rgba(240,166,220,.14);stroke:rgba(240,166,220,.8)}
+.art .arc{stroke:rgba(255,255,255,.35);stroke-width:1.2;stroke-dasharray:3 6}
+.art .msg{fill:#7fe9dc}.art .msg.p{fill:#f0a6dc}
+.art .wave path{stroke:#7fe9dc;stroke-width:2;transform-origin:center;animation:wave 1.2s ease-in-out infinite}
+.art .wave path:nth-child(2n){animation-delay:-.4s}
+@keyframes wave{50%{transform:scaleY(.5)}}
+.art .route{stroke-width:1.4}
+.art .route.faint{stroke:rgba(255,255,255,.14);stroke-dasharray:3 6}
+.art .route.draw{stroke:#b9a6ff;stroke-dasharray:420;stroke-dashoffset:420}
+.step.on .art .route.draw{animation:draw 2.4s .4s var(--out) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.art .stars circle{fill:#fff}
+.art .goal{fill:rgba(240,166,220,.3);stroke:#f0a6dc}
+.art .goal.r{fill:none;stroke-dasharray:2 4;transform-origin:330px 90px;animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.art .frame{stroke:rgba(255,255,255,.4);stroke-width:1.2}
+.art .blk{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.25);stroke-width:1}
+.step.on .art .blk{animation:fillin .6s var(--out) forwards}
+.step.on .art .k1{animation-delay:.5s}.step.on .art .k2{animation-delay:.7s}.step.on .art .k3{animation-delay:.85s}
+.step.on .art .k4{animation-delay:1s}.step.on .art .k5{animation-delay:1.15s}
+@keyframes fillin{to{fill:rgba(185,166,255,.35);stroke:rgba(185,166,255,.7)}}
+.step.on .art .k4{animation-name:fillbtn}
+@keyframes fillbtn{to{fill:#f0a6dc;stroke:#f0a6dc}}
+.art .code{fill:#7fe9dc;stroke:none;font:500 18px "JetBrains Mono",monospace}
+.art .spark{fill:#f0a6dc;stroke:none;transform-origin:336px 62px;animation:twinkle 2.2s ease-in-out infinite}
+@keyframes twinkle{50%{transform:scale(.6) rotate(45deg);opacity:.6}}
+.art .rocket path{fill:#fff;stroke:#f0a6dc;stroke-width:1}
+.art .orb{stroke:rgba(255,255,255,.3);stroke-width:1.2}
+.art .orb.f{stroke-dasharray:3 6}
+.art .sat rect{fill:#7fe9dc;stroke:none}.art .sat path{stroke:#7fe9dc;stroke-width:2}
+
+@media (max-width:860px){
+  .process{padding:12vh 18px 10vh}
+  .steps-row{flex-direction:column;height:auto;gap:10px}
+  .step{flex:none;height:76px;transition:height .7s var(--ease),border-color .4s}
+  .step.on{height:460px}
+  .step-v{writing-mode:horizontal-tb;transform:none;left:64px;bottom:auto;top:26px;font-size:17px}
+  .step-num{top:29px}
+  .step-body{left:20px;right:20px;bottom:22px}
+  .step .art{opacity:0}
+  .step.on .art{opacity:1;transform:translate(-50%,-78%) scale(1)}
+}
+
+/* ---------- first-view reveals for sections 04 and 05 ---------- */
+.make-copy .rv,.process-head .rv{opacity:0;transform:translateY(18px);filter:blur(6px);
+  transition:opacity .9s ease,transform 1.1s var(--out),filter .9s ease;transition-delay:var(--rd,0ms)}
+.make-copy.in .rv,.process-head.in .rv{opacity:1;transform:none;filter:blur(0)}
+.split .wd{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .04em .1em 0;margin-bottom:-.1em}
+.split .wd>span{display:inline-block;transform:translateY(108%);
+  transition:transform 1.1s var(--out);transition-delay:calc(var(--rd,0ms) + var(--wi) * 55ms)}
+.in .split .wd>span{transform:none}
+@media (prefers-reduced-motion:reduce){
+  .make-copy .rv,.process-head .rv{opacity:1;transform:none;filter:none;transition:none}
+  .split .wd>span{transform:none;transition:none}
+}
+
+/* ---------- section 02: small lead-in → three tiny chips → highlighted line → big tagline ---------- */
+.panel.s2 h2{font-size:clamp(18px,1.6vw,26px);letter-spacing:-.02em;color:rgba(240,238,250,.78)}
+.minis{margin:18px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.minis li{list-style:none;display:inline-flex;align-items:center;gap:9px;padding:8px 14px 8px 10px;border-radius:99px;
+  font:400 13px/1.2 Manrope,sans-serif;color:rgba(240,238,250,.86);
+  background:rgba(12,14,30,.55);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .7s var(--out);transition-delay:calc(var(--k) * 90ms + 200ms)}
+.minis svg{width:18px;height:18px;flex:none;fill:none;stroke:#7fe9dc;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.minis li:nth-child(2) svg{stroke:#b9a6ff}.minis li:nth-child(3) svg{stroke:#f0a6dc}
+.panel.live .minis li{opacity:1;transform:none}
+.panel.s2 .need{margin-top:26px;max-width:640px;font:400 clamp(17px,1.45vw,23px)/1.45 Sora,sans-serif;letter-spacing:-.015em;color:rgba(240,238,250,.82)}
+.need mark{background:none;color:#fff;font-weight:600;
+  background-image:linear-gradient(90deg,rgba(95,230,214,.55),rgba(240,166,220,.55));background-repeat:no-repeat;
+  background-size:0% 2px;background-position:0 100%;transition:background-size .9s var(--out) .6s}
+.panel.live .need mark{background-size:100% 2px}
+.panel.live .need mark:nth-of-type(2){transition-delay:.8s}
+.panel.live .need mark:nth-of-type(3){transition-delay:1s}
+/* the point of attention */
+.panel.s2 .tagline{margin-top:clamp(40px,6vh,64px);max-width:none}
+.tagline span{display:inline-block;padding-bottom:.08em;
+  font:400 clamp(30px,3.6vw,64px)/1.08 Sora,sans-serif;letter-spacing:-.035em;text-shadow:none;
+  background:linear-gradient(95deg,#a8f3ea 0%,#c9b8ff 50%,#f6c2e6 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  opacity:0;transform:translateY(16px);transition:opacity .8s ease .5s,transform 1s var(--out) .5s}
+.panel.live .tagline span{opacity:1;transform:none}
+@media (max-width:860px){
+  .minis li{font-size:12px}
+  .tagline span{font-size:clamp(28px,8.4vw,40px)}
+}
+
+/* ---------- section 03: the three tiles lead, the details sit small, the tagline closes ---------- */
+.panel.s3 .bring{margin-top:0;gap:14px}
+.panel.s3 .tile{min-height:clamp(130px,17vh,170px);padding:24px 26px;gap:12px;font-size:clamp(20px,1.85vw,30px);line-height:1.2;letter-spacing:-.02em}
+.panel.s3 .tile span{font-size:11px}
+.panel.s3 .join{font-size:28px}
+.panel.s3 .workout{margin-top:22px;gap:12px}
+.panel.s3 .tricky-lead{font-size:11px}
+.panel.s3 .marks li{height:32px;font-size:12.5px;padding:0 13px 0 6px;color:rgba(238,236,248,.75)}
+.panel.s3 .marks li i{width:22px;height:22px;font-size:10px}
+.panel.s3 .tagline{margin-top:clamp(36px,5.5vh,58px);max-width:none}
+@media (max-width:860px){
+  .panel.s3 .tile{min-height:0;padding:12px 16px;gap:6px;font-size:18px}
+  .panel.s3 .bring{gap:6px}
+  .panel.s3 .tagline{margin-top:26px}
+}
+
+/* ---------- enter with / without sound ---------- */
+.enter{position:absolute;left:50%;bottom:20vh;transform:translate(-50%,16px);display:flex;flex-direction:column;align-items:center;gap:18px;
+  opacity:0;pointer-events:none;transition:opacity .8s ease,transform .9s var(--out)}
+.can-enter .enter{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.can-enter .ld-bottom .pct{opacity:.25;transition:opacity .8s}
+.enter button{all:unset;cursor:pointer;font:500 14px/1 Manrope,sans-serif;color:#fff}
+.enter .enter-sound{display:inline-flex;align-items:center;gap:14px;height:56px;padding:0 30px;border-radius:99px;
+  background:linear-gradient(100deg,rgba(95,230,214,.16),rgba(138,106,232,.18) 50%,rgba(240,166,220,.18));
+  border:1px solid rgba(255,255,255,.26);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 10px 40px -12px rgba(138,106,232,.6);transition:transform .35s var(--out),border-color .35s,background .35s}
+.enter .enter-sound:hover,.enter .enter-sound:focus-visible{transform:translateY(-2px);border-color:rgba(255,255,255,.5)}
+.enter .enter-quiet{color:rgba(232,230,245,.62);font-size:13px;padding:6px 2px;border-bottom:1px solid rgba(232,230,245,.25);transition:color .3s,border-color .3s}
+.enter .enter-quiet:hover,.enter .enter-quiet:focus-visible{color:#fff;border-color:#f0a6dc}
+.eq{display:inline-flex;align-items:flex-end;gap:2px;height:12px}
+.eq i{width:2px;height:100%;border-radius:1px;background:currentColor;transform-origin:bottom;animation:eq 1.1s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:-.3s}.eq i:nth-child(3){animation-delay:-.6s}.eq i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+
+/* ---------- sound on / off in the nav ---------- */
+.sound-toggle{all:unset;cursor:pointer;pointer-events:auto;display:inline-flex;align-items:center;gap:12px;opacity:0;transition:opacity .8s 1.2s,color .3s;
+  font:500 11px/1 "JetBrains Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:rgba(232,230,245,.6)}
+.ready .sound-toggle{opacity:1}
+.sound-toggle:hover,.sound-toggle:focus-visible{color:#fff}
+.sound-toggle .eq i{animation-play-state:paused;transform:scaleY(.25)}
+.sound-on .sound-toggle{color:#f6d6ee}
+.sound-on .sound-toggle .eq i{animation-play-state:running}
+@media (prefers-reduced-motion:reduce){ .grain{animation:none} }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+
+<div class="bgv" id="bgv">
+  <img id="still" src="assets/astronaut.jpg" alt="">
+  <video id="vid" src="assets/astronaut-pullback.mp4" muted playsinline preload="auto"></video>
+  <div class="tint"></div>
+  <div class="glow"></div>
+  <div class="shade"></div>
+</div>
+<canvas id="particles"></canvas>
+
+<div class="loader" id="loader">
+  <div class="plus" style="left:25%;top:84px"></div>
+  <div class="plus" style="left:50%;top:84px"></div>
+  <div class="plus" style="left:75%;top:84px"></div>
+  <div class="plus" style="left:25%;top:50%"></div>
+  <div class="plus" style="left:75%;top:50%"></div>
+  <div class="plus" style="left:25%;top:calc(100% - 120px)"></div>
+  <div class="plus" style="left:50%;top:calc(100% - 120px)"></div>
+  <div class="plus" style="left:75%;top:calc(100% - 120px)"></div>
+  <div class="vlabel">Deep Space <sup>Series</sup></div>
+  <div class="ld-top mono">
+    <div>[01/01]<br><span style="color:var(--faint)">WLWIS — Design studio</span></div>
+    <div class="r"><span id="date"></span><br><span style="color:var(--faint)">Zero gravity mode</span></div>
+  </div>
+  <div class="ld-bottom">
+    <div class="status mono"><b>Loading the cosmos</b><span id="stage">Igniting thrusters</span></div>
+    <div class="pct" aria-live="polite"><span id="num">0</span><sup>%</sup></div>
+  </div>
+  <div class="bar"><i id="fill"></i><em id="head"></em></div>
+  <div class="enter" id="enter">
+    <button class="enter-sound" id="enterSound">
+      <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Enter with sound
+    </button>
+    <button class="enter-quiet" id="enterQuiet">Enter without sound</button>
+  </div>
+</div>
+
+<div class="brand-wrap" id="brandWrap"><div class="brand" id="brand" role="heading" aria-level="1" aria-label="We Love Working In Space"></div></div>
+
+<div class="curtain"></div>
+
+<div class="orbitbg" id="orbitbg">
+  <canvas id="space"></canvas>
+  <div class="scrim"></div>
+</div>
+<div class="cur-ring" id="curRing"><i></i></div>
+<div class="cur-dot" id="curDot"></div>
+
+<main class="site" id="site">
+  <nav class="nav">
+    <a href="#" class="logo" id="logo" aria-label="WLWIS home"></a>
+    <button class="sound-toggle" id="soundToggle" aria-pressed="false">
+      <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span id="soundLabel">Sound off</span>
+    </button>
+  </nav>
+
+  <section class="panel" id="s1" aria-labelledby="h-s1">
+    <div class="label">Independent design &amp; development studio</div>
+    <h1 id="h-s1">Got an idea?<br>Let’s make it real.</h1>
+    <p>We’ll help you figure out what makes sense to build, then design and develop it with you. Already know what you need? We can pick it up from there, too.</p>
+    <a href="#" class="cta"><i></i>Tell us what you’re working on
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </section>
+
+  <section class="panel wide s2" id="s2" aria-labelledby="h-s2">
+    <h2 id="h-s2">Now what?</h2>
+    <ul class="minis">
+      <li style="--k:0"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="8" width="28" height="24" rx="3"/><path d="M6 16h28M6 24h28M15 8v24M25 8v24"/></svg>Spreadsheets doing software’s job</li>
+      <li style="--k:1"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="3"/><path d="M5 14h30M12 26l5-5 4 3 7-6"/></svg>A website that’s stopped working for you</li>
+      <li style="--k:2"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="4"/><ellipse cx="20" cy="20" rx="14" ry="6" transform="rotate(-24 20 20)"/></svg>An idea you can’t stop thinking about</li>
+    </ul>
+    <p class="need">Now you have to figure out <mark>what to build</mark>, <mark>who to trust</mark>, and <mark>how to make it all happen</mark>.</p>
+    <p class="tagline"><span>That’s where we come in.</span></p>
+  </section>
+
+  <section class="panel wide s3" id="s3" aria-label="Here’s our approach">
+    <div class="bring">
+      <div class="tile" style="--k:0"><span>You know</span>your business</div>
+      <i class="join" aria-hidden="true">+</i>
+      <div class="tile" style="--k:1"><span>We bring</span>design &amp; development expertise</div>
+      <i class="join" aria-hidden="true">→</i>
+      <div class="tile result" style="--k:2"><span>Together</span>we move it forward</div>
+    </div>
+    <div class="workout">
+      <span class="tricky-lead">We’ll work out</span>
+      <ul class="marks">
+        <li style="--k:3"><i class="yes" aria-hidden="true">✓</i>What you need</li>
+        <li style="--k:4"><i class="no" aria-hidden="true">✕</i>What you don’t</li>
+        <li style="--k:5"><i class="go" aria-hidden="true">→</i>The best way to bring it to life</li>
+      </ul>
+    </div>
+    <p class="tagline"><span>Good questions first. Good work follows.</span></p>
+  </section>
+
+  <nav class="index" aria-label="Sections">
+    <a href="#" data-go="0" class="on">01<b>&nbsp;Hello</b></a>
+    <a href="#" data-go="1">02<b>&nbsp;Sound familiar?</b></a>
+    <a href="#" data-go="2">03<b>&nbsp;Our approach</b></a>
+  </nav>
+  <div class="hint" id="hint"><i></i>Scroll to orbit</div>
+</main>
+<div class="scroll-space" aria-hidden="true"></div>
+<section class="next" id="next" aria-labelledby="h-make">
+  <div class="build" id="build">
+    <div class="build-inner">
+
+      <!-- left: the copy, always readable -->
+      <div class="make-copy">
+        <div class="label">04 / What we can make</div>
+        <h2 id="h-make">Okay, so what can we make?</h2>
+        <p class="make-sub">From your first online presence to software that makes work a whole lot easier.</p>
+        <ol class="services" id="services">
+          <li data-i="0"><span class="n">01</span><div><h3>Websites &amp; landing pages</h3>
+            <p>Give your business a home online, tell your story, and make it easier for the right people to find you.</p></div></li>
+          <li data-i="1"><span class="n">02</span><div><h3>Mobile &amp; web apps</h3>
+            <p>Turn an idea into a useful experience people can actually use.</p></div></li>
+          <li data-i="2"><span class="n">03</span><div><h3>Custom software &amp; SaaS</h3>
+            <p>Replace clunky workflows and disconnected tools with software built around how your business works.</p></div></li>
+        </ol>
+      </div>
+
+      <!-- right: the build -->
+      <div class="stage" id="stage">
+        <div class="stage-top">
+          <ol class="phases" id="phases">
+            <li>Wireframe</li><li>Surfaces</li><li>Interface</li><li>Live</li>
+          </ol>
+          <div class="bprog"><span class="mono">Build progress</span><b id="bnum">000</b><i>%</i></div>
+        </div>
+
+        <div class="devbox" id="devbox">
+          <!-- scattered tools, pulled into the software in step 03 -->
+          <svg class="links" id="links" aria-hidden="true"></svg>
+          <div class="tools" id="tools" aria-hidden="true">
+            <span style="--x:2%;--y:14%">Spreadsheets</span>
+            <span style="--x:4%;--y:78%">Email threads</span>
+            <span style="--x:86%;--y:8%">Sticky notes</span>
+            <span style="--x:84%;--y:86%">Old CRM</span>
+            <span style="--x:46%;--y:96%">Chat messages</span>
+          </div>
+
+          <div class="dev" id="dev" aria-hidden="true">
+            <div class="chrome"><i></i><i></i><i></i><span class="url" id="url">lumen.studio</span></div>
+            <div class="notch"></div>
+            <div class="cols"></div>
+
+            <!-- 01 website: wireframe → surfaces → interface -->
+            <div class="layer web">
+              <div class="we logo" style="--l:5%;--t:9%;--w:11%;--h:6%"><b class="ui">lumen<em>.</em></b></div>
+              <div class="we pill" style="--l:62%;--t:9%;--w:9%;--h:6%"><b class="ui">Work</b></div>
+              <div class="we pill" style="--l:72.5%;--t:9%;--w:9%;--h:6%"><b class="ui">Services</b></div>
+              <div class="we pill" style="--l:83%;--t:9%;--w:11%;--h:6%"><b class="ui">Get in touch</b></div>
+              <div class="we head" style="--l:5%;--t:26%;--w:46%;--h:24%">
+                <i class="bar" style="width:46%;top:16%"></i><i class="bar" style="width:72%;top:58%"></i>
+                <b class="ui">Your story,<br>beautifully online.</b></div>
+              <div class="we para" style="--l:5%;--t:55%;--w:38%;--h:12%">
+                <i class="line" style="top:18%"></i><i class="line" style="top:46%"></i><i class="line" style="top:74%;width:55%"></i>
+                <b class="ui">A clear, fast site that helps the right people find you and get in touch.</b></div>
+              <div class="we btn primary" style="--l:5%;--t:73%;--w:19%;--h:9%"><b class="ui">Start a project ↗</b></div>
+              <div class="we btn" style="--l:26%;--t:73%;--w:16%;--h:9%"><b class="ui">Our work</b></div>
+              <div class="we img" style="--l:56%;--t:22%;--w:38%;--h:64%">
+                <svg class="x" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 0L100 100M100 0L0 100"/></svg>
+                <div class="ui orb"></div></div>
+              <!-- measurements -->
+              <div class="meas mw" style="--l:5%;--t:51.5%;--w:46%"><span>455</span></div>
+              <div class="meas mh" style="--l:3.2%;--t:73%;--h:9%"><span>52</span></div>
+              <div class="meas top" id="msize"><span>1200 × 760</span></div>
+            </div>
+
+            <!-- 02 app -->
+            <div class="layer app">
+              <div class="ap status"><span>9:41</span><span>● ● ▮</span></div>
+              <div class="ap hello" style="--k:0"><small>Good morning</small><b>Your day</b></div>
+              <div class="ap card" style="--k:1"><small>Projects</small><b>12 active</b>
+                <div class="ring"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15"/><circle class="pr" cx="18" cy="18" r="15"/></svg><span>72%</span></div></div>
+              <div class="ap row" style="--k:2"><i style="--c:#5fe6d6"></i><div><b>Design review</b><small>Today · 2:30 pm</small></div><em class="tg on"></em></div>
+              <div class="ap row" style="--k:3"><i style="--c:#8a6ae8"></i><div><b>Launch checklist</b><small>8 of 10 done</small></div><em class="tg"></em></div>
+              <div class="ap row" style="--k:4"><i style="--c:#f0a6dc"></i><div><b>New message</b><small>“Looks great!”</small></div><em class="tg on"></em></div>
+              <div class="ap tabs" style="--k:5"><i class="on"></i><i></i><i></i><i></i></div>
+              <div class="ap toast" style="--k:6">✓ Booking confirmed</div>
+            </div>
+
+            <!-- 03 software / SaaS -->
+            <div class="layer dash">
+              <aside class="ds side"><b>ops<em>.</em></b><i class="on"></i><i></i><i></i><i></i><i></i></aside>
+              <div class="ds top"><span class="search">Search orders, people, tasks…</span><span class="av"></span></div>
+              <div class="ds kpi" style="--l:22%"><small>Orders today</small><b data-to="248">0</b><em>+18%</em></div>
+              <div class="ds kpi" style="--l:47%"><small>Hours saved / week</small><b data-to="36">0</b><em>automated</em></div>
+              <div class="ds kpi" style="--l:72%"><small>Tools replaced</small><b data-to="5">0</b><em>one place</em></div>
+              <div class="ds chart"><small>Throughput</small><div class="bars" id="bars"></div></div>
+              <div class="ds table">
+                <div class="tr"><span>#1042 · Order</span><em class="st ok">Done</em></div>
+                <div class="tr"><span>#1043 · Invoice</span><em class="st run">Auto-sent</em></div>
+                <div class="tr"><span>#1044 · Booking</span><em class="st ok">Synced</em></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="process" id="process" aria-labelledby="h-process">
+  <header class="process-head">
+    <div class="label">05 / The process</div>
+    <h2 id="h-process">Here’s what working with us looks like.</h2>
+    <p>Just a few thoughtful steps from idea to launch.</p>
+  </header>
+
+  <div class="steps-row" id="stepsRow">
+    <article class="step on" style="--tint:95,230,214" tabindex="0" aria-expanded="true">
+      <svg class="art a1" viewBox="0 0 400 300" aria-hidden="true">
+        <circle class="pl" cx="90" cy="170" r="34"/><circle class="pl b" cx="310" cy="130" r="26"/>
+        <path id="talk1" class="arc" d="M120 150 Q200 40 285 120"/><path id="talk2" class="arc" d="M290 150 Q205 250 122 190"/>
+        <circle class="msg" r="5"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#talk1"/></animateMotion></circle>
+        <circle class="msg p" r="4"><animateMotion dur="3.1s" begin="1.2s" repeatCount="indefinite"><mpath href="#talk2"/></animateMotion></circle>
+        <g class="wave"><path d="M60 236h10M78 228v16M90 222v28M102 230v12M114 226v20"/></g>
+      </svg>
+      <div class="step-num">01</div>
+      <h3 class="step-v">We talk it through.</h3>
+      <div class="step-body">
+        <h3>We talk it through.</h3>
+        <p>We get to know your business, the problem you’re solving, and what success could look like.</p>
+      </div>
+    </article>
+
+    <article class="step" style="--tint:120,150,255" tabindex="0" aria-expanded="false">
+      <svg class="art a2" viewBox="0 0 400 300" aria-hidden="true">
+        <path class="route faint" d="M60 220 L130 170 L120 95 L210 120 L250 60 L330 90"/>
+        <path class="route draw" d="M60 220 L130 170 L210 120 L290 150 L330 90"/>
+        <g class="stars"><circle cx="60" cy="220" r="4"/><circle cx="130" cy="170" r="4"/><circle cx="120" cy="95" r="3"/>
+          <circle cx="210" cy="120" r="4"/><circle cx="250" cy="60" r="3"/><circle cx="290" cy="150" r="4"/></g>
+        <circle class="goal" cx="330" cy="90" r="9"/><circle class="goal r" cx="330" cy="90" r="18"/>
+      </svg>
+      <div class="step-num">02</div>
+      <h3 class="step-v">We figure out the plan.</h3>
+      <div class="step-body">
+        <h3>We figure out the plan.</h3>
+        <p>We agree on the right approach, what’s included, and what it’ll take to get there.</p>
+      </div>
+    </article>
+
+    <article class="step" style="--tint:138,106,232" tabindex="0" aria-expanded="false">
+      <svg class="art a3" viewBox="0 0 400 300" aria-hidden="true">
+        <rect class="frame" x="70" y="50" width="260" height="190" rx="12"/><path class="frame" d="M70 74h260"/>
+        <rect class="blk k1" x="90" y="94" width="110" height="18" rx="4"/><rect class="blk k2" x="90" y="122" width="150" height="10" rx="3"/>
+        <rect class="blk k3" x="90" y="140" width="120" height="10" rx="3"/><rect class="blk k4" x="90" y="172" width="70" height="22" rx="11"/>
+        <rect class="blk k5" x="250" y="94" width="60" height="100" rx="8"/>
+        <text class="code" x="96" y="226">&lt;/&gt;</text>
+        <path class="spark" d="M330 40 l6 16 16 6 -16 6 -6 16 -6 -16 -16 -6 16 -6z"/>
+      </svg>
+      <div class="step-num">03</div>
+      <h3 class="step-v">We design and build.</h3>
+      <div class="step-body">
+        <h3>We design and build.</h3>
+        <p>We bring design and development together, using AI tools where they help us explore ideas, test possibilities, and work more efficiently. AI helps us work smarter. Human judgment still leads the way.</p>
+      </div>
+    </article>
+
+    <article class="step" style="--tint:240,166,220" tabindex="0" aria-expanded="false">
+      <svg class="art a4" viewBox="0 0 400 300" aria-hidden="true">
+        <circle class="pl" cx="70" cy="260" r="60"/>
+        <path id="launch" class="arc" d="M100 220 C 170 200, 230 140, 330 50"/>
+        <g class="rocket"><path d="M0 -9 L6 7 L0 4 L-6 7z"/><animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines=".5 0 .3 1"><mpath href="#launch"/></animateMotion></g>
+        <g class="stars"><circle cx="300" cy="200" r="2"/><circle cx="220" cy="60" r="1.5"/><circle cx="360" cy="140" r="2"/><circle cx="160" cy="110" r="1.5"/></g>
+      </svg>
+      <div class="step-num">04</div>
+      <h3 class="step-v">We get it out into the world.</h3>
+      <div class="step-body">
+        <h3>We get it out into the world.</h3>
+        <p>We test, launch, and hand over the product so you know what comes next.</p>
+      </div>
+    </article>
+
+    <article class="step" style="--tint:180,140,240" tabindex="0" aria-expanded="false">
+      <svg class="art a5" viewBox="0 0 400 300" aria-hidden="true">
+        <ellipse class="orb" cx="200" cy="150" rx="150" ry="52" transform="rotate(-12 200 150)"/>
+        <ellipse class="orb f" cx="200" cy="150" rx="105" ry="34" transform="rotate(-12 200 150)"/>
+        <circle class="pl" cx="200" cy="150" r="30"/>
+        <path id="orbitLoop" d="M50 150 a150 52 0 1 0 300 0 a150 52 0 1 0 -300 0" fill="none" transform="rotate(-12 200 150)"/>
+        <g transform="rotate(-12 200 150)"><g class="sat"><rect x="-5" y="-5" width="10" height="10" rx="2"/><path d="M-14 0h-6M14 0h6"/>
+          <animateMotion dur="6s" repeatCount="indefinite"><mpath href="#orbitLoop"/></animateMotion></g></g>
+      </svg>
+      <div class="step-num">05</div>
+      <h3 class="step-v">And we’re here for what’s next.</h3>
+      <div class="step-body">
+        <h3>And we’re here for what’s next.</h3>
+        <p>Need a hand with maintenance, improvements, or figuring out the next step? Let’s talk. We’re happy to keep helping beyond launch, with ongoing support agreed around your needs.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="grain"></div>
+
+<script>
+window.SPACE = { active: false, progress: 0, exit: 0, spin: .06, intro: 0, mx: 0, my: .3 };
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = s => document.querySelector(s);
+  const f = n => n.toFixed(1);
+  const body = document.body;
+
+  /* ---------- studio name ---------- */
+  const brand = $('#brand'), logo = $('#logo');
+  const words = [['We', 1], ['Love', 1], ['Working', 1], ['In', 1], ['Space', 1]];
+  let idx = 0;
+  words.forEach(([word, keep]) => {
+    const w = document.createElement('span');
+    w.className = 'w' + (keep ? '' : ' skip');
+    [...word].forEach((char, k) => {
+      const c = document.createElement('span');
+      c.className = 'ch ' + (keep && k === 0 ? 'i' : 'r');
+      c.style.setProperty('--i', idx++);
+      c.textContent = char;
+      w.appendChild(c);
+    });
+    brand.appendChild(w);
+  });
+  [...'WLWIS'].forEach(char => {
+    const c = document.createElement('span');
+    c.className = 'ch';
+    c.textContent = char;
+    logo.appendChild(c);
+  });
+  $('#date').textContent = new Date().toLocaleDateString('en-GB').replace(/\//g, '.');
+  requestAnimationFrame(() => body.classList.add('booted'));
+
+  /* ---------- dust drifting past as we travel away ---------- */
+  const cv = $('#particles'), ctx = cv.getContext('2d');
+  const palette = ['95,230,214', '138,106,232', '240,166,220', '120,150,255', '235,235,250'];
+  let W, H, dpr, parts = [], mx = 0, my = 0, pmx = 0, pmy = 0, running = true;
+  function resize() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr;
+  }
+  resize(); addEventListener('resize', resize);
+  addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+  const K = () => Math.max(1, Math.min(W, H) * .5);   // never 0, even in a hidden zero-size tab
+  function spawn(p, fresh) {
+    p.z = fresh ? Math.random() * 1.1 + .1 : Math.random() * .25 + .12;
+    p.x = (Math.random() - .5) * W * 1.3 * p.z / K();
+    p.y = (Math.random() - .5) * H * 1.3 * p.z / K();
+    p.c = palette[Math.random() * palette.length | 0];
+    p.s = (Math.random() ** 2 * 2.4 + .5) * dpr;
+    p.a = 0; p.tw = Math.random() * 6.28;
+  }
+  for (let i = 0; i < (reduce ? 60 : 180); i++) { const p = {}; spawn(p, true); parts.push(p); }
+
+  let last = performance.now();
+  function frame(now) {
+    if (!running) return;
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    pmx += (mx - pmx) * .04; pmy += (my - pmy) * .04;
+    ctx.clearRect(0, 0, W, H);
+    const cx = W * (.5 - pmx * .04), cy = H * (.56 - pmy * .04), k = K();
+    for (const p of parts) {
+      p.z += .07 * dt * (.6 + p.z);          // recede towards the vanishing point
+      p.a = Math.min(1, p.a + dt * .8);
+      if (p.z > 1.5) { spawn(p, false); continue; }
+      const x = cx + p.x / p.z * k, y = cy + p.y / p.z * k;
+      if (!isFinite(x) || !isFinite(y)) { spawn(p, false); continue; }
+      const size = p.s / Math.max(.25, p.z);
+      const alpha = p.a * Math.min(1, (1.5 - p.z) / .6) * (.4 + .22 * Math.sin(now / 900 + p.tw));
+      if (size > 3.2 * dpr) {                 // soft bokeh close to the camera
+        const g = ctx.createRadialGradient(x, y, 0, x, y, size * 2);
+        g.addColorStop(0, `rgba(${p.c},${alpha * .3})`); g.addColorStop(1, `rgba(${p.c},0)`);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, size * 2, 0, 6.283); ctx.fill();
+      } else {
+        ctx.fillStyle = `rgba(${p.c},${alpha})`;
+        ctx.beginPath(); ctx.arc(x, y, size, 0, 6.283); ctx.fill();
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* ---------- 0 → 100 follows the video exactly ---------- */
+  const vid = $('#vid'), bgv = $('#bgv'), still = $('#still');
+  const num = $('#num'), fill = $('#fill'), head = $('#head'), stage = $('#stage');
+  const stages = ['Igniting thrusters', 'Leaving orbit', 'Drifting into deep space', 'Almost there', 'Welcome aboard'];
+  const FALLBACK = reduce ? 1500 : 8000;
+  let mode = 'wait', fallbackStart = 0;
+
+  vid.addEventListener('playing', () => { if (mode !== 'timer') { mode = 'video'; bgv.classList.add('playing'); } });
+  const fontsReady = new Promise(r => {
+    const gf = $('#gf');
+    gf.media === 'all' ? r() : gf.addEventListener('load', r);
+    setTimeout(r, 2500);
+  }).then(() => document.fonts.load('400 40px Michroma')).catch(() => {})
+    .then(() => body.classList.add('fonts'));
+
+  // start the footage once the name can render in its real typeface
+  fontsReady.then(() => {
+    if (reduce) return useTimer();
+    vid.play().catch(useTimer);
+    setTimeout(() => { if (mode === 'wait') useTimer(); }, 3000);   // video blocked or too slow
+  });
+  function useTimer() { mode = 'timer'; fallbackStart = performance.now(); vid.pause(); bgv.classList.add('fallback'); }
+
+  const ease = t => t < .5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
+  function render(p) {
+    const v = Math.min(100, Math.floor(p * 100));
+    num.textContent = v;
+    fill.style.transform = `scaleX(${p})`;
+    head.style.left = p * 100 + '%';
+    stage.textContent = stages[Math.min(4, Math.floor(v / 25))];
+    return v;
+  }
+  function load(now) {
+    let p = 0;
+    if (mode === 'video') p = vid.ended ? 1 : (vid.currentTime / vid.duration || 0);
+    else if (mode === 'timer') {
+      const t = Math.min(1, (now - fallbackStart) / FALLBACK);
+      p = t;
+      still.style.transform = `scale(${f(1 - .7 * ease(t))})`;    // still image recedes instead
+    }
+    if (render(p) >= 100) return setTimeout(askToEnter, 250);
+    requestAnimationFrame(load);
+  }
+  requestAnimationFrame(load);
+
+  /* ---------- sound: a quiet ambient pad, generated live (no audio files) ----------
+     scrolling opens the filter and adds a soft whoosh; a chime marks each new section */
+  const Sound = (() => {
+    let ctx = null, master, filter, air, airGain, verb, on = false;
+    const label = () => document.getElementById('soundLabel');
+    function impulse(seconds, decay) {                    // generated reverb tail
+      const len = ctx.sampleRate * seconds, buf = ctx.createBuffer(2, len, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) {
+        const d = buf.getChannelData(c);
+        for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay);
+      }
+      return buf;
+    }
+    function build() {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+      verb = ctx.createConvolver(); verb.buffer = impulse(5, 2.4);
+      const wet = ctx.createGain(); wet.gain.value = .7; verb.connect(wet).connect(master);
+      const dry = ctx.createGain(); dry.gain.value = .45; dry.connect(master);
+      filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 520; filter.Q.value = .5;
+      filter.connect(dry); filter.connect(verb);
+
+      // warm pad: D, A, E, F#, A, C# (a soft Dmaj9 voicing), each voice gently breathing
+      const pad = ctx.createGain(); pad.gain.value = .16; pad.connect(filter);
+      [73.42, 110, 164.81, 185, 220, 277.18].forEach((f, i) => {
+        [-5, 5].forEach(cents => {
+          const o = ctx.createOscillator(), g = ctx.createGain(), lfo = ctx.createOscillator(), depth = ctx.createGain();
+          o.type = i < 2 ? 'sine' : 'triangle';
+          o.frequency.value = f; o.detune.value = cents + (Math.random() * 4 - 2);
+          g.gain.value = (i < 2 ? .5 : .16) / 2;
+          lfo.frequency.value = .04 + Math.random() * .07; depth.gain.value = g.gain.value * .7;
+          lfo.connect(depth).connect(g.gain);
+          o.connect(g).connect(pad); o.start(); lfo.start();
+        });
+      });
+
+      // filtered noise: the 'air' that swells while scrolling
+      const nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), nd = nb.getChannelData(0);
+      for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+      const noise = ctx.createBufferSource(); noise.buffer = nb; noise.loop = true;
+      air = ctx.createBiquadFilter(); air.type = 'bandpass'; air.frequency.value = 900; air.Q.value = .8;
+      airGain = ctx.createGain(); airGain.gain.value = .004;
+      noise.connect(air).connect(airGain).connect(filter); airGain.connect(verb);
+      noise.start();
+
+      document.addEventListener('visibilitychange', () => {
+        if (!ctx) return;
+        document.hidden ? ctx.suspend() : on && ctx.resume();
+      });
+    }
+    function set(state) {
+      on = state;
+      document.body.classList.toggle('sound-on', on);
+      const btn = document.getElementById('soundToggle');
+      if (btn) btn.setAttribute('aria-pressed', on);
+      if (label()) label().textContent = on ? 'Sound on' : 'Sound off';
+      if (!ctx) return;
+      if (on) ctx.resume();
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.setTargetAtTime(on ? .5 : 0, ctx.currentTime, on ? 1.2 : .25);
+    }
+    return {
+      start() { if (!ctx) build(); set(true); },
+      toggle() { if (!ctx) build(); set(!on); },
+      update(spin, exit = 0) {                            // spin: ~.06 at rest, up to ~1.2 while scrolling
+        if (!ctx || !on) return;
+        const t = ctx.currentTime, k = Math.min(1, spin / 1.2);
+        const surge = Math.sin(Math.PI * exit);           // the warp swells, then everything settles
+        filter.frequency.setTargetAtTime(520 + k * 2200 + surge * 1800 - exit * 200, t, .25);
+        airGain.gain.setTargetAtTime(.004 + k * .05 + surge * .07, t, .2);
+        air.frequency.setTargetAtTime(900 + k * 1600 + surge * 2400, t, .3);
+        master.gain.setTargetAtTime(.5 - exit * .22, t, .4);
+      },
+      chime(index) {                                      // soft bell when a new section arrives
+        if (!ctx || !on) return;
+        const t = ctx.currentTime, base = [587.33, 659.25, 739.99][index] || 587.33;
+        [[1, .05], [2.01, .018], [3, .008]].forEach(([mult, vol]) => {
+          const o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = 'sine'; o.frequency.value = base * mult;
+          g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .02);
+          g.gain.exponentialRampToValueAtTime(.0001, t + 3.2);
+          o.connect(g); g.connect(master); g.connect(verb);   // clear tone plus a long tail
+          o.start(t); o.stop(t + 3.3);
+        });
+      },
+      tick() {                                            // tiny tick on hover
+        if (!ctx || !on) return;
+        const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(1760, t); o.frequency.exponentialRampToValueAtTime(1320, t + .08);
+        g.gain.setValueAtTime(.012, t); g.gain.exponentialRampToValueAtTime(.0001, t + .12);
+        o.connect(g).connect(master); o.start(t); o.stop(t + .14);
+      },
+    };
+  })();
+
+  /* ---------- 100% → choose sound → black screen from the top → site ---------- */
+  function askToEnter() {
+    stage.textContent = 'Ready for launch';
+    body.classList.add('can-enter');
+    const go = withSound => {
+      body.classList.remove('can-enter');
+      if (withSound) Sound.start();
+      finish();
+    };
+    $('#enterSound').addEventListener('click', () => go(true), { once: true });
+    $('#enterQuiet').addEventListener('click', () => go(false), { once: true });
+    $('#enterSound').focus({ preventScroll: true });
+  }
+
+  const wait = ms => new Promise(r => setTimeout(r, reduce ? 0 : ms));
+  async function finish() {
+    $('#loader').classList.add('done');
+    brand.querySelectorAll('.ch').forEach(c => c.style.animation = 'none');
+
+    // keep only W · L · W · I · S
+    brand.classList.add('fading');
+    await wait(600);
+
+    // slide the four initials together (FLIP)
+    const inits = [...brand.querySelectorAll('.i')];
+    const first = inits.map(e => e.getBoundingClientRect());
+    brand.classList.add('collapsed');
+    $('#brandWrap').classList.add('lift');
+    inits.forEach((e, k) => {
+      const l = e.getBoundingClientRect();
+      e.style.transition = 'none';
+      e.style.transform = `translate(${first[k].left - l.left}px, ${first[k].top - l.top}px)`;
+    });
+    brand.offsetWidth;
+    inits.forEach((e, k) => {
+      e.style.transition = `transform ${reduce ? 0 : .95}s var(--ease) ${k * 45}ms`;
+      e.style.transform = '';
+    });
+    await wait(1150);
+
+    // black screen sweeps down; WLWIS settles into the top-left corner
+    body.classList.add('covered');
+    await wait(350);
+    const b = brand.getBoundingClientRect(), l = logo.getBoundingClientRect();
+    brand.style.transition = `transform ${reduce ? 0 : 1.2}s var(--ease)`;
+    brand.style.transform = `translate(${l.left - b.left}px, ${l.top - b.top}px) scale(${l.height / b.height})`;
+    await wait(1250);
+
+    logo.classList.add('on');
+    $('#brandWrap').remove();
+    $('#loader').remove();
+    $('#bgv').remove();
+    running = false; cv.remove();
+
+    // the black screen is down: bring in the orbit and the hero
+    body.classList.add('ready');
+    startSite();
+  }
+
+  /* ---------- site: the 3D scene (module below) reads this shared state every frame ---------- */
+  const SPACE = window.SPACE;
+  history.scrollRestoration = 'manual';
+
+  /* ---------- 04 / what we can make: the build, driven by scroll ----------
+     0 – .10 frame draws · .10 – .37 website (wireframe → surfaces → interface)
+     .37 – .66 morph to a phone, app builds · .66 – .96 widen to software, tools get pulled in, charts grow */
+  function startBuild() {
+    const next = $('#next'), dev = $('#dev'), box = $('#devbox'), url = $('#url');
+    const items = [...document.querySelectorAll('#services li')], phases = [...document.querySelectorAll('#phases li')];
+    const bnum = $('#bnum'), bars = $('#bars'), links = $('#links'), tools = [...document.querySelectorAll('#tools span')];
+    const kpis = [...dev.querySelectorAll('.kpi b')];
+    const web = dev.querySelector('.web'), app = dev.querySelector('.app'), dash = dev.querySelector('.dash');
+    const notch = dev.querySelector('.notch'), chrome = dev.querySelector('.chrome'), cols = dev.querySelector('.cols');
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const seg = (p, a, b) => clamp((p - a) / (b - a));
+    const lerp = (a, b, k) => a + (b - a) * k;
+    [.35, .5, .42, .62, .55, .7, .66, .8, .74, .9, .86, 1].forEach(h => {
+      const i = document.createElement('i'); i.style.setProperty('--hgt', h); bars.appendChild(i);
+    });
+    links.innerHTML = '<defs><linearGradient id="lg"><stop offset="0" stop-color="#f0a6dc"/><stop offset="1" stop-color="#7fe9dc"/></linearGradient></defs>' +
+      tools.map(() => '<path/>').join('');
+    const paths = [...links.querySelectorAll('path')];
+    let cur = 0, lastStep = -1, lastPhase = -1;
+
+    function frame() {
+      const top = next.offsetTop, span = next.offsetHeight - innerHeight;
+      const raw = clamp((scrollY - top) / (span || 1));
+      cur += (raw - cur) * (reduce ? 1 : .12);
+      const p = cur;
+      if (scrollY + innerHeight < top - 50) { requestAnimationFrame(frame); return; }
+
+      const draw = seg(p, .02, .1), wire = seg(p, .1, .17), fill = seg(p, .17, .24), ui = seg(p, .24, .33);
+      const toPhone = ease(seg(p, .38, .47)), appIn = seg(p, .45, .5), appb = seg(p, .47, .63);
+      const toDash = ease(seg(p, .66, .75)), dashIn = seg(p, .73, .78), barsK = ease(seg(p, .77, .9)), kpiK = seg(p, .76, .92);
+      const toolsK = seg(p, .63, .68) * (1 - seg(p, .9, .96)), connect = ease(seg(p, .68, .88));
+
+      // the frame: browser → phone → wide software
+      const W = box.clientWidth, H = box.clientHeight;
+      const phoneH = Math.min(H * .98, 640), phoneW = Math.min(W, phoneH * .49);
+      const fullW = Math.min(W, H * 1.62), fullH = Math.min(H, W / 1.62);
+      const w = lerp(lerp(fullW, phoneW, toPhone), fullW, toDash), h = lerp(lerp(fullH, phoneH, toPhone), fullH, toDash);
+      dev.style.width = w + 'px'; dev.style.height = h + 'px';
+      dev.style.borderRadius = lerp(lerp(16, 42, toPhone), 16, toDash) + 'px';
+      dev.style.clipPath = `inset(0 ${((1 - draw) * 100).toFixed(2)}% 0 0 round 16px)`;
+      const phoneness = toPhone * (1 - toDash);
+      chrome.style.opacity = 1 - phoneness; notch.style.opacity = phoneness;
+      url.textContent = p < .55 ? 'lumen.studio' : 'ops.yourbusiness.app';
+
+      web.style.setProperty('--wire', wire); web.style.setProperty('--fill', fill); web.style.setProperty('--ui', ui);
+      web.style.opacity = 1 - seg(p, .36, .41);
+      cols.style.opacity = (wire * (1 - ui) * .9).toFixed(3);
+      app.style.opacity = appIn * (1 - seg(p, .64, .69));
+      app.style.setProperty('--appb', appb);
+      dash.style.opacity = dashIn; dash.style.setProperty('--dash', dashIn);
+      dash.style.setProperty('--bars', barsK);
+      kpis.forEach(k => { k.textContent = Math.round(+k.dataset.to * ease(kpiK)); });
+
+      // scattered tools drift into the software
+      const br = box.getBoundingClientRect(), dr = dev.getBoundingClientRect();
+      const cx = dr.left - br.left + dr.width / 2, cy = dr.top - br.top + dr.height / 2;
+      tools.forEach((t, i) => {
+        const tx = t.offsetLeft + t.offsetWidth / 2, ty = t.offsetTop + t.offsetHeight / 2;
+        t.style.setProperty('--tools', toolsK); t.style.setProperty('--connect', connect);
+        t.style.setProperty('--dx', ((cx - tx) * connect * .55).toFixed(1));
+        t.style.setProperty('--dy', ((cy - ty) * connect * .55).toFixed(1));
+        const sx = tx + (cx - tx) * connect * .55, sy = ty + (cy - ty) * connect * .55;
+        paths[i].setAttribute('d', `M${sx.toFixed(1)} ${sy.toFixed(1)} Q${((sx + cx) / 2).toFixed(1)} ${(sy - 40).toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)}`);
+        paths[i].style.opacity = (toolsK * (1 - connect * .6)).toFixed(3);
+        paths[i].style.strokeDashoffset = (-p * 400).toFixed(1);
+      });
+
+      // copy + counters
+      const step = p < .37 ? 0 : p < .66 ? 1 : 2;
+      if (step !== lastStep) {
+        items.forEach((li, i) => li.classList.toggle('on', i === step));
+        if (lastStep !== -1) Sound.chime(step);
+        lastStep = step;
+      }
+      const phase = p < .17 ? 0 : p < .24 ? 1 : p < .9 ? 2 : 3;
+      if (phase !== lastPhase) {
+        phases.forEach((li, i) => { li.classList.toggle('on', i === phase); li.classList.toggle('done', i < phase); });
+        lastPhase = phase;
+      }
+      bnum.textContent = String(Math.round(p * 100)).padStart(3, '0');
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- 05 / the process: open a step on hover, click or keyboard focus ---------- */
+  function startProcess() {
+    const proc = $('#process'), steps = [...document.querySelectorAll('.step')];
+    const open = el => {
+      if (el.classList.contains('on')) return;
+      steps.forEach(s => { s.classList.toggle('on', s === el); s.setAttribute('aria-expanded', s === el); });
+    };
+    steps.forEach(st => {
+      st.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') open(st); });
+      st.addEventListener('click', () => open(st));
+      st.addEventListener('focus', () => open(st));
+      st.addEventListener('keydown', e => {
+        const i = steps.indexOf(st);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); steps[Math.min(i + 1, steps.length - 1)].focus(); }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); steps[Math.max(i - 1, 0)].focus(); }
+      });
+    });
+    new IntersectionObserver((en, ob) => {
+      if (en[0].isIntersecting) { proc.classList.add('seen'); ob.disconnect(); }
+    }, { threshold: .2 }).observe($('#stepsRow'));
+  }
+
+  // split a heading into words that rise from behind a mask (keeps <br> line breaks; read aloud as one sentence)
+  function splitWords(h) {
+    h.setAttribute('aria-label', h.textContent.replace(/\s+/g, ' ').trim());
+    const parts = [...h.childNodes];
+    h.textContent = '';
+    let n = 0;
+    parts.forEach(node => {
+      if (node.nodeName === 'BR') { h.appendChild(document.createElement('br')); return; }
+      node.textContent.trim().split(/\s+/).filter(Boolean).forEach(w => {
+        if (n && h.lastChild && h.lastChild.nodeName !== 'BR') h.appendChild(document.createTextNode(' '));
+        const outer = document.createElement('span'), inner = document.createElement('span');
+        outer.className = 'wd'; outer.setAttribute('aria-hidden', 'true');
+        inner.textContent = w; inner.style.setProperty('--wi', n++);
+        outer.appendChild(inner); h.appendChild(outer);
+      });
+    });
+    h.classList.add('split');
+    return n;
+  }
+
+  /* ---------- sections 04 / 05: heading words rise, then the copy fades up — once, on first view ---------- */
+  function startReveals() {
+    const prep = (box, heading, rest) => {
+      const words = splitWords(heading);
+      heading.style.setProperty('--rd', '120ms');
+      rest.forEach((el, i) => {
+        el.classList.add('rv');
+        // the label leads; everything after waits for the heading to land
+        el.style.setProperty('--rd', (i === 0 ? 0 : 120 + words * 55 + 150 + (i - 1) * 110) + 'ms');
+      });
+      new IntersectionObserver((en, ob) => {
+        if (en[0].isIntersecting) { box.classList.add('in'); ob.disconnect(); }
+      }, { threshold: .35 }).observe(box);
+    };
+    const mc = $('.make-copy');
+    prep(mc, $('#h-make'), [mc.querySelector('.label'), mc.querySelector('.make-sub'), ...mc.querySelectorAll('.services li')]);
+    const ph = $('.process-head');
+    prep(ph, $('#h-process'), [ph.querySelector('.label'), ph.querySelector('p')]);
+  }
+
+  function startSite() {
+    const hint = $('#hint'), dot = $('#curDot'), ring = $('#curRing'), ringInner = ring.firstElementChild;
+    const panels = [...document.querySelectorAll('.panel')];
+    panels.forEach(p => { const h = p.querySelector('h1, h2'); if (!h) return; splitWords(h); h.style.setProperty('--rd', '80ms'); });
+    const links = [...document.querySelectorAll('.index a')];
+    // the journey, measured in screens of scroll:
+    //   0 – 3.2   the three sections (story progress 0 – 1)
+    //   3.2 – 3.8 section 03 fades away
+    //   3.8 – 4.6 just the astronaut and the orbit
+    //   4.6 – 6.0 exit: the astronaut bursts into stardust, we warp through the ring, fade to black
+    //   6.0 +     the plain dark section scrolls in
+    const STORY = 3.2, EXIT_FROM = 4.6, EXIT_LEN = 1.4;
+    // story progress where each panel fades [in from, in to, out from, out to]
+    const windows = [[-1, -1, .2, .3], [.34, .44, .6, .68], [.74, .84, 1.03, 1.17]];
+    const stops = [0, .52 * STORY, STORY];
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const obg = $('#orbitbg');
+
+    body.classList.add('scrollable');
+    scrollTo(0, 0);
+    startBuild();
+    startProcess();
+    startReveals();
+    SPACE.active = true;
+    let target = 0, cur = 0, lastY = 0, spin = 0, last = performance.now(), lastActive = -1;
+    $('#soundToggle').addEventListener('click', () => Sound.toggle());
+    const introStart = last;
+    let mx = innerWidth * .5, my = innerHeight * .35, gx = mx, gy = my;
+    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    let glitchT = 0;
+    function glitch() {                                   // brief tear in the ring
+      clearTimeout(glitchT); ring.classList.remove('glitch'); void ring.offsetWidth;
+      ring.classList.add('glitch'); glitchT = setTimeout(() => ring.classList.remove('glitch'), 300);
+    }
+    addEventListener('pointerdown', e => {               // click: a ring pulse spreads out
+      const b = document.createElement('div');
+      b.className = 'cur-burst'; b.style.left = e.clientX + 'px'; b.style.top = e.clientY + 'px';
+      document.body.appendChild(b); setTimeout(() => b.remove(), 950); glitch();
+    });
+    document.querySelectorAll('a, .sound-toggle, .step').forEach(a => {
+      a.addEventListener('pointerenter', () => { ring.classList.add('hover'); glitch(); Sound.tick(); });
+      a.addEventListener('pointerleave', () => ring.classList.remove('hover'));
+    });
+    addEventListener('scroll', () => { target = scrollY / innerHeight; }, { passive: true });
+    links.forEach(a => a.addEventListener('click', e => {
+      e.preventDefault();
+      scrollTo({ top: stops[a.dataset.go] * innerHeight, behavior: 'smooth' });
+    }));
+
+    function tick(now) {
+      const dt = Math.min(.05, (now - last) / 1000); last = now;
+      const intro = ease(clamp((now - introStart) / 1800));
+      cur += (target - cur) * (reduce ? 1 : .07);
+
+      // always orbiting slowly; scrolling (either way) spins it up, then it eases back down
+      const scrollSpeed = Math.abs(scrollY - lastY) / Math.max(dt, .001); lastY = scrollY;
+      const want = (reduce ? .02 : .06) + Math.min(scrollSpeed * .0006, 1.2);
+      spin += (want - spin) * (want > spin ? .12 : .03);
+
+      const lx = mx - gx, ly = my - gy;                  // how far the ring trails the pointer
+      gx += lx * .16; gy += ly * .16;
+      const lag = Math.hypot(lx, ly), stretch = 1 + Math.min(lag * .012, .55);
+      dot.style.transform = `translate(${mx}px, ${my}px)`;
+      ring.style.transform = `translate(${gx.toFixed(1)}px, ${gy.toFixed(1)}px) rotate(${Math.atan2(ly, lx).toFixed(3)}rad) scale(${stretch.toFixed(3)}, ${(1 / stretch).toFixed(3)})`;
+      ringInner.style.setProperty('--gx', Math.max(-7, Math.min(7, lx * .12)).toFixed(1) + 'px');
+      ringInner.style.setProperty('--gy', Math.max(-7, Math.min(7, ly * .12)).toFixed(1) + 'px');
+      if (lag > 140 && Math.random() < .06) glitch();
+
+      const story = cur / STORY;
+      const exit = clamp((cur - EXIT_FROM) / EXIT_LEN);
+      SPACE.progress = Math.min(story, 1.45); SPACE.exit = exit; SPACE.spin = spin; SPACE.intro = intro;
+      obg.style.setProperty('--scrim', (1 - clamp((story - 1.05) / .15)).toFixed(3));
+      body.classList.toggle('past-story', story > 1.1);
+      body.classList.toggle('in-next', exit >= 1);
+      SPACE.mx = mx / innerWidth * 2 - 1; SPACE.my = -(my / innerHeight * 2 - 1);
+
+      panels.forEach((p, i) => {
+        const [a, b, c, d] = windows[i];
+        let o = story < a ? 0 : story < b ? (story - a) / (b - a) : story < c ? 1 : story < d ? 1 - (story - c) / (d - c) : 0;
+        let y = story < b ? (1 - o) * 48 : story > c ? -(1 - o) * 48 : 0;
+        if (i === 0) { o *= ease(clamp((now - introStart) / 1500 - .3)); y += (1 - intro) * 30; }
+        p.style.setProperty('--o', o.toFixed(3));
+        p.style.setProperty('--y', y.toFixed(1) + 'px');
+        p.classList.toggle('live', o > .02);
+        if (o > .3) p.classList.add('in');               // titles rise once, the first time a section arrives
+      });
+      const active = story < .32 ? 0 : story < .71 ? 1 : 2;
+      if (active !== lastActive) { if (lastActive !== -1) Sound.chime(active); lastActive = active; }
+      Sound.update(spin, exit);
+      links.forEach((a, i) => a.classList.toggle('on', i === active));
+      hint.style.setProperty('--ho', (ease(clamp((now - introStart) / 1500 - .8)) * (1 - clamp(story / .08))).toFixed(2));
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+})();
+</script>
+<script type="module" src="space.js"></script>
+</body>
+</html>

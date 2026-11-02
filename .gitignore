@@ -1,0 +1,13 @@
+# earlier design versions kept locally, not part of the site
+index-v*.html
+space-v*.js
+
+# generated / source media the live page doesn't load
+assets/*
+!assets/astronaut.jpg
+!assets/astronaut.glb
+!assets/astronaut-pullback.mp4
+
+# local tooling
+.claude/
+.DS_Store
